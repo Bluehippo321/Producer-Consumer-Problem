@@ -12,6 +12,9 @@ pcProblems.c is the one file implementation of the project - everything is worki
     gcc pcProblem.c -pthread -lrt -o pcProblem
     ./pcProblem
 
+![image](https://github.com/Bluehippo321/Producer-Consumer-Problem/assets/149278207/fdb2e914-0b58-4b7e-ac8f-34e15e759e77)
+
+
 ################################
 
 consumer.c and producer.c is the multiple file implementation of the project - currently NOT working
