@@ -71,9 +71,9 @@ int main(int argc, char* argv[]){
     ftruncate(fd, SIZE);
 
     // implementation of buffer and counter into shared memory
-    tmpBuffer1 = (int*)mmap(NULL, 1, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
-    tmpBuffer2 = (int*)mmap(NULL, 1, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
-    tmpCount = (int*)mmap(NULL, 1, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+    tmpBuffer1 = (int*)mmap(NULL, sizeof(int), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+    tmpBuffer2 = (int*)mmap(NULL, sizeof(int), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+    tmpCount = (int*)mmap(NULL, sizeof(int), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
 
     // implemetation of empty and full semaphores into shared memory
     semEmpty = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
