@@ -27,20 +27,21 @@ consumer.c and producer.c is the multiple file implementation of the project - c
   currently NOT working
   main problem coming from implementation of memory sharing
   currently using mmap method for mem sharing
+  had troubles implementing shared memory through given documentation
   
 ![image](https://github.com/Bluehippo321/Producer-Consumer-Problem/assets/149278207/318b41da-26ae-43d4-80a8-626a91d3d045)
   
-  4 items are in shared memory: buffer, count, and full and empty semaphores
+  5 items are in shared memory: buffer(broken into two tmp variables), count, and full and empty semaphores
 
-![image](https://github.com/Bluehippo321/Producer-Consumer-Problem/assets/149278207/58b8be07-0faa-4125-b894-200b16189a1b)
+![image](https://github.com/Bluehippo321/Producer-Consumer-Problem/assets/149278207/c70548db-c880-4c6c-a9ca-f9d48dcd8c41)
 
   I believe everything is linked and working properly in the shared memory, but knowing how it works is the issue
-  I think the buffer and count are the issue and the semaphores should be working
-  becuase the buffer's and counter's location does matter, I think that is why they aren't working
-  semaphores should be working because their location doesn't
-  
-  had troubles implementing shared memory through given documentation
-  currently programs will compile, but nothing will be printed to terminal, implying there is an issue with the buffer
+  I think the buffer and count are the issue and the semaphores are working
+  buffer and count are being updated manually by using a tmp variable to transfer data between shared and local memory
+  process is inefficient, but should work on paper
+  shared memory will update local to shared memory, then critial process will proceed, then local will update shared memory to local memory
+
+  programs will compile, but nothing will be printed to terminal, implying there is an issue with the buffer
 
   can be complied with
     gcc producer.c -pthread -lrt -o producer
