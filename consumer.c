@@ -19,11 +19,16 @@
 sem_t* semEmpty;
 sem_t* semFull;
 
-// variables for buffer and shared memory
+// variables for buffer and linking of shared memory
 const int SIZE = 4096;
 const char *name = "data";
-int* buffer;
-int* count = 0;
+int buffer[2];
+int count = 0;
+
+// shared memeory variables
+int* tmpBuffer1 = -1;
+int* tmpBuffer2 = -1;
+int* tmpCount;
 
 // takes a num from the buffer and outputs it
 void* consumer(void* args){
@@ -33,9 +38,23 @@ void* consumer(void* args){
 
         // CRITICAL SECTION
         sem_wait(semFull);
+        // updates buffer in local to buffer in shared memory
+        buffer[0] = tmpBuffer1;
+        buffer[1] = tmpBuffer2;
+
+        // updates count in local to count in shared memory
+        count = tmpCount;
+
         // takes a number out of the buffer and decrements the count
-        y = buffer[*count-1];
+        y = buffer[count-1];
         count--;
+
+        // updates count in shared memory to count in local
+        tmpCount = count;
+
+        // updates buffer in shared memory to buffer in local
+        tmpBuffer1 = buffer[0];
+        tmpBuffer2 = buffer[1];
         sem_post(semEmpty);
         // CRITICAL SECTION
 
@@ -56,8 +75,9 @@ int main(int argc, char* argv[]){
     int fd = shm_open(name, O_RDWR, 0666);
 
     // implementation of buffer and counter through shared memory
-    buffer = (int*)mmap(NULL, 2, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
-    count = (int*)mmap(NULL, 1, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+    tmpBuffer1 = (int*)mmap(NULL, 1, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+    tmpBuffer2 = (int*)mmap(NULL, 1, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+    tmpCount = (int*)mmap(NULL, 1, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
 
     // implementation of full and empty semaphore into shared memory
     semEmpty = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
